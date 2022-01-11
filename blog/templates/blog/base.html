@@ -88,12 +88,12 @@
     <div class="row">
 
         <!-- Blog entries-->
-        <div class="col-lg-8" id="main_div">
+        <div class="col-lg-8" id="main-div">
             {% block content %}
             {% endblock %}
         </div>
         <!-- Side widgets-->
-        <div class="col-lg-4" id="sid_div">
+        <div class="col-lg-4" id="side-div">
             <!-- Search widget-->
             <div class="card mb-4">
                 <div class="card-header">Search</div>
@@ -113,11 +113,11 @@
                             <ul class="list-unstyled mb-0">
                                 {% for category in category_list %}
                                 <li>
-                                    <a href="#!">{{ category.name }} ({{ category.post_set.count }})</a>
+                                    <a href="{{ category.get_absolute_url }}">{{ category.name }} ({{ category.post_set.count }})</a>
                                 </li>
                                 {% endfor %}
                                 <li>
-                                    <a href="#!">미분류 ({{ posts_without_category }})</a>
+                                    <a href="/blog/category/_none/">미분류 ({{ posts_without_category }})</a>
                                 </li>
                             </ul>
                         </div>
