@@ -13,7 +13,13 @@
             <img class="card-img-top" src="https://picsum.photos/750/300/?random" alt="Card image cap">
         {% endif %}
 
+
     <div class="card-body">
+            {% if p.category %}
+            <span class="badge bg-primary pull-right">{{ p.category }}</span>
+            {% else %}
+            <span class="badge bg-primary pull-right">미분류</span>
+            {% endif %}
             <h2 class="card-title">{{ p.title }}</h2>
             <p class="card-text">{{ p.content | truncatewords:50}}</p>
             <a class="btn btn-primary" href="{{ p.get_absolute_url }}" id="read-more-post-{{ p.pk }}">Read more →</a>
