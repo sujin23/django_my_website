@@ -19,12 +19,17 @@
 
 </header>
 <!-- Preview image figure-->
-{% if object.head_image %}
-<img class="img-fluid rounded" src="https://dummyimage.com/900x400/ced4da/6c757d.jpg" alt="">
-{% endif %}
+    {% if object.head_image %}
+    <img class="img-fluid rounded" src="https://dummyimage.com/900x400/ced4da/6c757d.jpg" alt="" />
+    {% endif %}
 
 <!-- Post content-->
 {{ object.content }}
+
+<br/>
+{% for tag in object.tags.all %}
+<a href="{{ tag.get_absolute_url }}" style="text-decoration:none">  #{{ tag }}  </a>
+{% endfor %}
 
 <hr>
 
