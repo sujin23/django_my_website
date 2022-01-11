@@ -16,7 +16,7 @@
     <div class="card-body">
             <h2 class="card-title">{{ p.title }}</h2>
             <p class="card-text">{{ p.content | truncatewords:50}}</p>
-            <a class="btn btn-primary" href="#!">Read more →</a>
+            <a class="btn btn-primary" href="{{ p.get_absolute_url }}" id="read-more-post-{{ p.pk }}">Read more →</a>
     </div>
     <div class="card-footer text-muted">
         Posted on {{ p.created }} by
