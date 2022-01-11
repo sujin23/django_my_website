@@ -6,6 +6,13 @@
 <header class="mb-4">
     <!-- Post title -->
     <h1>{{ object.title }}</h1>
+
+    {% if object.category %}
+    <span class="badge bg-primary pull-right">{{ object.category }}</span>
+    {% else %}
+    <span class="badge bg-primary pull-right">미분류</span>
+    {% endif %}
+
     <!-- Author -->
     <p class="lead">
         by
@@ -14,14 +21,17 @@
 
     <hr>
     <!-- Date/Time -->
+    {% if request.user == object.author %}
+    <button type="button" class="btn btn-sm btn-outline-secondary pull-right">EDIT</button>
+    {% endif %}
     <p>Posted on {{ object.created }} </p>
     <hr>
 
 </header>
 <!-- Preview image figure-->
-    {% if object.head_image %}
-    <img class="img-fluid rounded" src="https://dummyimage.com/900x400/ced4da/6c757d.jpg" alt="" />
-    {% endif %}
+{% if object.head_image %}
+<img class="img-fluid rounded" src="https://dummyimage.com/900x400/ced4da/6c757d.jpg" alt="" />
+{% endif %}
 
 <!-- Post content-->
 {{ object.content }}
