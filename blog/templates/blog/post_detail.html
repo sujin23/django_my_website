@@ -22,7 +22,7 @@
     <hr>
     <!-- Date/Time -->
     {% if request.user == object.author %}
-    <button type="button" class="btn btn-sm btn-outline-secondary pull-right">EDIT</button>
+    <button type="button" class="btn btn-sm btn-outline-secondary pull-right" onclick="location.href='{{ object.get_update_url }}'">EDIT</button>
     {% endif %}
     <p>Posted on {{ object.created }} </p>
     <hr>
