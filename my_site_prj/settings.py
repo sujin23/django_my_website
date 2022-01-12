@@ -19,6 +19,8 @@ ALLOWED_HOSTS = []
 # Application definition
 INSTALLED_APPS = [
     'blog',
+    'basecamp',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
