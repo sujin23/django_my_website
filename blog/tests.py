@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from .models import Post, Category, Tag, Comment
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 def create_category(name='life', description=''):
     category, is_created = Category.objects.get_or_create(
@@ -440,9 +441,10 @@ class TestView(TestCase):
             self.assertTrue(login_success)
 
             # login을 다른 사람으로 했을 때,
-            response = self.client.get('/blog/delete_comment/{}/'.format(comment_000.pk), follow=True)
-            self.assertEqual(Comment.objects.count(), 2)
-            self.assertEqual(post_000.comment_set.count(), 2)
+            with self.assertRaises(PermissionError):
+                response = self.client.get('/blog/delete_comment/{}/'.format(comment_000.pk), follow=True)
+                self.assertEqual(Comment.objects.count(), 2)
+                self.assertEqual(post_000.comment_set.count(), 2)
 
             login_success = self.client.login(username='obama', password='nopassword')
             response = self.client.get('/blog/delete_comment/{}/'.format(comment_000.pk), follow=True)

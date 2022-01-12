@@ -1,5 +1,4 @@
 """my_site_prj URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.1/topics/http/urls/
 Examples:
@@ -13,13 +12,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-
 from django.urls import path, include
 from . import views
-
 urlpatterns = [
     path('tag/<str:slug>/', views.PostListByTag.as_view()),
     path('category/<str:slug>/', views.PostListByCategory.as_view()),
+    # path('delete_comment/<int:pk>/', views.CommentDelete.as_view()),
     path('delete_comment/<int:pk>/', views.delete_comment),
     path('<int:pk>/new_comment/', views.new_comment),
     path('<int:pk>/update/', views.PostUpdate.as_view()),
