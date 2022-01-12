@@ -82,10 +82,11 @@ class TestModel(TestCase):
         )
         post_001.tags.add(tag_001)
         post_001.save()
+
         self.assertEqual(post_000.tags.count(), 2)  # post는 여러개의 tag를 가질 수 있다.
         self.assertEqual(tag_001.post_set.count(), 2)  # 하나의 tag는 여러개의 post에 붙을 수 있다.
-        self.assertEqual(tag_001.post_set.first(), post_000)  # 하나의 tag는 자신을 가진 post들을 불러올 수 있다.
-        # self.assertEqual(tag_001.post_set.last(), post_001)  # 하나의 tag는 자신을 가진 post들을 불러올 수 있다.
+        # self.assertEqual(tag_001.post_set.first(), post_001)  # 하나의 tag는 자신을 가진 post들을 불러올 수 있다.
+        self.assertEqual(tag_001.post_set.last(), post_000)  # 하나의 tag는 자신을 가진 post들을 불러올 수 있다.
 
     def test_post(self):
         category = create_category()
@@ -183,31 +184,25 @@ class TestView(TestCase):
                 content='Content {}'.format(i),
                 author=self.author_000,
             )
-
         response = self.client.get('/blog/')
         self.assertEqual(response.status_code, 200)
         soup = BeautifulSoup(response.content, 'html.parser')
-
         self.assertNotIn('Older', soup.body.text)
         self.assertNotIn('Newer', soup.body.text)
-
         for i in range(3, 10):
             post = create_post(
                 title='The post No. {}'.format(i),
                 content='Content {}'.format(i),
                 author=self.author_000,
             )
-
         response = self.client.get('/blog/')
         self.assertEqual(response.status_code, 200)
         soup = BeautifulSoup(response.content, 'html.parser')
-
         self.assertIn('Older', soup.body.text)
         self.assertIn('Newer', soup.body.text)
 
     def test_post_detail(self):
         category_politics = create_category(name='정치/사회')
-
         post_000 = create_post(
             title='The first post',
             content='Hello World. We are the world.',
@@ -440,3 +435,31 @@ class TestView(TestCase):
         soup = BeautifulSoup(response.content, 'html.parser')
         self.assertNotIn('I am president of the US', soup.body.text)
         self.assertIn('I was president of the US', soup.body.text)
+
+    def test_search(self):
+        post_000 = create_post(
+            title='Stay Fool, Stay Hungry',
+            content='Amazing Apple story',
+            author=self.author_000
+        )
+
+        post_001 = create_post(
+            title='Trump Said',
+            content='Make America Great Again',
+            author=self.author_000
+        )
+
+        response = self.client.get('/blog/search/Stay Fool/')
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+        self.assertIn(post_000.title, soup.body.text)
+        self.assertNotIn(post_001.title, soup.body.text)
+
+        response = self.client.get('/blog/search/Make America/')
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+        self.assertIn(post_001.title, soup.body.text)
+        self.assertNotIn(post_000.title, soup.body.text)
+
+
+
