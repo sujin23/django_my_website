@@ -1,7 +1,38 @@
 {% extends 'basecamp/base_full.html' %}
-
+{% load static %}
 {% block content %}
-    <div class="container">
-        <h1>About Me</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <h1 class="my-3">About Me</h1>
+            <h3 class="my-5">안녕하세요. 김수진입니다.</h3>
+            <h5 class="my-2">저는 서울여자대학교 정보보호학과 3학년입니다.  </h5>
+            <p></p>
+            <h5 class="my-2">다양한 분야에서 재미있는 일을 찾고 있습니다.</h5>
+            <p></p>
+            <h8 class="my-4">제 인스타그램 아이디 bawlingbawling은 아이디를 만들 당시에 </h8>
+            <a target="_blank" href="https://www.youtube.com/watch?v=GDeiJybf8qY">좋아했던 노래</a>
+            <h8 class="my-4">에서 따왔습니다. 솔직히 별 뜻은 없어요.</h8>
+            <p></p>
+            <h8 class="my-4">생일은 2월 3일입니다. 얼마 남지 않았습니다.</h8>
+            <p></p>
+            <h8 class="my-4">취미는 독서, 좋아하는 음식은 햄버거입니다. 근데 한식도 좋아하구 일식도 좋아하구 중식 양식 다 좋아합니다ㅎ</h8>
+            <p></p>
+            <p>더 이상 쓸 내용이 없ㅅㅂㅡ니다. </p>
+            <p></p>
+        </div>
+        <div class="col-md">
+            <img class="img-fluid" src="{% static 'basecamp/images/contactme.jpg' %}"/>
+        </div>
     </div>
+    <div class="row">
+        <div class="col-md-3">
+            <img class="img-fluid" src="{% static 'basecamp/images/aboutme.jpg' %}"/>
+        </div>
+        <div class="col-md">
+            <h1 class="my-3">Contact Me</h1>
+            <h5>E-mail: <small>sujin@swu.ac.kr</small></h5>
+        </div>
+    </div>
+</div>
 {% endblock %}
