@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="ko" xmlns="http://www.w3.org/1999/html">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Blog{% endblock %}</title>
@@ -62,22 +62,22 @@
             </ul>
             <ul class="nav navbar-nav ml-auto">
                 {% if user.is_authenticated %}
-                    <li class="nav-item dropdown">
+                <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" id="download">{{ user }} <span class="caret"></span></a>
                     <div class="dropdown-menu" aria-labelledby="download">
-<!--                        <a class="dropdown-item" rel="noopener" target="_blank" href="https://jsfiddle.net/bootswatch/1uvdsae4/">Open in JSFiddle</a>-->
-<!--                        <div class="dropdown-divider"></div>-->
-<!--                        <a class="dropdown-item" href="../5/simplex/bootstrap.min.css" download>bootstrap.min.css</a>-->
-<!--                        <a class="dropdown-item" href="../5/simplex/bootstrap.css" download>bootstrap.css</a>-->
-<!--                        <div class="dropdown-divider"></div>-->
-<!--                        <a class="dropdown-item" href="../5/simplex/_variables.scss" download>_variables.scss</a>-->
+                        <!--                        <a class="dropdown-item" rel="noopener" target="_blank" href="https://jsfiddle.net/bootswatch/1uvdsae4/">Open in JSFiddle</a>-->
+                        <!--                        <div class="dropdown-divider"></div>-->
+                        <!--                        <a class="dropdown-item" href="../5/simplex/bootstrap.min.css" download>bootstrap.min.css</a>-->
+                        <!--                        <a class="dropdown-item" href="../5/simplex/bootstrap.css" download>bootstrap.css</a>-->
+                        <!--                        <div class="dropdown-divider"></div>-->
+                        <!--                        <a class="dropdown-item" href="../5/simplex/_variables.scss" download>_variables.scss</a>-->
                         <a class="dropdown-item float-right" href="/accounts/logout/">Log out</a>
                     </div>
                 </li>
                 {% else %}
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
-                        Log in
-                    </button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
+                    Log in
+                </button>
                 {% endif %}
             </ul>
         </div>
@@ -128,9 +128,10 @@
                 <div class="card-header">Search</div>
                 <div class="card-body">
                     <div class="input-group">
-                        <input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
-                        <button class="btn btn-primary" id="button-search" type="button">Go!</button>
-                    </div>
+                        <input type="text" id="search-input" onkeyup="wait_for_enterkey()" class="form-control" placeholder="Search for..."/>
+                        <span class="input-group-btn">
+                                <button class="btn btn-secondary" type="button" onclick="search_post();">Go!</button>
+                            </span></div>
                 </div>
             </div>
             <!-- Categories widget-->
@@ -157,7 +158,21 @@
     </div>
 </div>
 
+<script>
+    function search_post(){
+        var search_value = document.getElementById('search-input').value;
+        location.href="/blog/search/" + search_value + "/";
+    }
+
+    function wait_for_enterkey(){
+        if (window.event.keyCode == 13){
+            search_post();
+        }
+    }
+</script>
+
 <script src="{% static 'blog/_assets/js/jquery.min.js' %}"></script>
+<script src="{% static 'blog/_assets/js/popper.min.js' %}"></script>
 <script src="{% static 'blog/bootstrap/bootstrap.bundle.min.js' %}"></script>
 <script src="{% static 'blog/_assets/js/prism.js' %}" data-manual></script>
 <script src="{% static 'blog/_assets/js/custom.js' %}"></script>

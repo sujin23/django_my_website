@@ -8,6 +8,7 @@
     Blog
     {% if category %}<small class="text-muted">: {{ category }}</small>{% endif %}
     {% if tag %}<small class="text-muted">: #{{ tag }}</small>{% endif %}
+    {% if search_info %}<small class="text-muted">: {{ search_info }} ({{ object_list.count }})</small>{% endif %}
 </h1>
 
 {% if object_list.exists %}
@@ -24,9 +25,9 @@
 
     <div class="card-body">
         {% if p.category %}
-            <span class="badge badge-primary float-right">{{ p.category }}</span>
+        <span class="badge badge-primary float-right">{{ p.category }}</span>
         {% else %}
-            <span class="badge badge-primary float-right">미분류</span>
+        <span class="badge badge-primary float-right">미분류</span>
         {% endif %}
         <h2 class="card-title">{{ p.title }}</h2>
         <p class="card-text">{{ p.content | truncatewords:50}}</p>
