@@ -5,14 +5,13 @@
 {% block title %}{{ object.title }} - Blog{% endblock %}
 
 {% block content %}
-<header class="mb-4">
     <!-- Post title -->
     <h1>{{ object.title }}</h1>
 
     {% if object.category %}
-    <span class="badge bg-primary pull-right">{{ object.category }}</span>
+        <span class="badge bg-primary pull-right">{{ object.category }}</span>
     {% else %}
-    <span class="badge bg-primary pull-right">미분류</span>
+        <span class="badge bg-primary pull-right">미분류</span>
     {% endif %}
 
     <!-- Author -->
@@ -20,58 +19,56 @@
         by
         <a href="#">{{ object.author.username }}</a>
     </p>
-
-    <hr>
-    <!-- Date/Time -->
     {% if request.user == object.author %}
-    <button type="button" class="btn btn-sm btn-outline-secondary pull-right" onclick="location.href='{{ object.get_update_url }}'">EDIT</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary pull-right" onclick="location.href='{{ object.get_update_url }}'">EDIT</button>
     {% endif %}
+    <hr>
+
+    <!-- Date/Time -->
     <p>Posted on {{ object.created }} </p>
     <hr>
 
-</header>
 <!-- Preview image figure-->
-{% if object.head_image %}
-<img class="img-fluid rounded" src="{{ object.head_image.url }}" alt="{{ object.title }}" />
-{% endif %}
+    {% if object.head_image %}
+        <img class="img-fluid rounded" src="{{ object.head_image.url }}" alt="{{ object.title }}" />
+    {% endif %}
 
 <!-- Post content-->
-{{ object.get_markdown_content | safe}}
+    {{ object.get_markdown_content | safe}}
 
-<br/>
-{% for tag in object.tags.all %}
-<a href="{{ tag.get_absolute_url }}" style="text-decoration:none">  #{{ tag }}  </a>
-{% endfor %}
-
-<hr>
+    <br/>
+    {% for tag in object.tags.all %}
+        <a href="{{ tag.get_absolute_url }}" style="text-decoration:none">  #{{ tag }}  </a>
+    {% endfor %}
+    <hr>
 
 <!-- Comments section-->
-<section class="mb-5">
-    <div class="card bg-light">
+    <div class="mb-4">
+        <h5 class="card-header">Leave a Comment:</h5>
         <div class="card-body">
-            <!-- Comment form-->
-            <div class="card mb-4">
-                <h5 class="card-header">Leave a Comment:</h5>
-                <div class="card-body">
-                    <form method="post" action="{{ object.get_absolute_url }}new_comment/">{% csrf_token %}
-                        <div class="form-group">
-                            {{ comment_form | crispy }}
-                        </div>
-                        <button type="submit" class="btn btn-sm btn-primary">Submit</button>
-                    </form>
+            <form method="post" action="{{ object.get_absolute_url }}new_comment/">{% csrf_token %}
+                <div class="form-group">
+                    {{ comment_form | crispy }}
                 </div>
+                <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+            </form>
+        </div>
 
-                <div id="comment-list">
-                    {% for comment in object.comment_set.all %}
-                    <div class="media mb-4" id="comment-id-{{ comment.pk }}">
-                        <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-                        <div class="media-body">
-                            <h5 class="mt-0">{{ comment.author }}</h5>
-                            {{ comment.get_markdown_content | safe }}
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
+    <div id="comment-list">
+        {% for comment in object.comment_set.all %}
+        <div class="media mb-4" id="comment-id-{{ comment.pk }}">
+            <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+            <div class="media-body">
+                {% if comment.author == request.user %}
+                <button class="btn btn-sm btn-info pull-right">edit</button>
+                <button class="btn btn-sm btn-warning pull-right">delete</button>
+                {% endif %}
+                <h5 class="mt-0">{{ comment.author }}<small class="text-muted"> {{ comment.created_at }}</small></h5>
+                {{ comment.get_markdown_content | safe }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 
                 <!-- Comment with nested comments-->
                 <div class="d-flex mb-4">
@@ -102,4 +99,4 @@
         </div>
     </div>
     {% endblock %}
-</section>
+</div>
