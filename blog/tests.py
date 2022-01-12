@@ -52,7 +52,7 @@ def create_post(title, content, author, category=None):
 class TestMode(TestCase):
     def setUp(self):
         self.client = Client()
-        self.author_000 = User.objects.create(username='smith', password='smithpassword')
+        self.author_000 = User.objects.create(username='smith', password='nopassword')
 
     def test_category(self):
         category = create_category()
@@ -127,8 +127,8 @@ class TestMode(TestCase):
 class TestView(TestCase):
     def setUp(self):
         self.client = Client()
-        self.author_000 = User.objects.create_user(username='smith', password='smithpassword')
-        self.user_obama = User.objects.create_user(username='obama', password='smithpassword')
+        self.author_000 = User.objects.create_user(username='smith', password='nopassword')
+        self.user_obama = User.objects.create_user(username='obama', password='nopassword')
 
     def check_navbar(self, soup):
         navbar = soup.find('div', id='navbar')
@@ -258,7 +258,7 @@ class TestView(TestCase):
         self.assertIn(category_politics.name, main_div.text) # category가 main_div에 있다.
         self.assertNotIn('EDIT', main_div.text) # EDIT 버튼이 로그인하지 않은 경우 보이지 않는다.
 
-        login_success = self.client.login(username='smith', password='smithpassword') # login을 한 경우에는
+        login_success = self.client.login(username='smith', password='nopassword') # login을 한 경우에는
         self.assertTrue(login_success)
         response = self.client.get(post_000_url)
         self.assertEqual(response.status_code, 200)
@@ -269,7 +269,7 @@ class TestView(TestCase):
         self.assertIn('EDIT', main_div.text) # EDIT 버튼이 있다.
 
         # 다른 사람인 경우에는 없다.
-        login_success = self.client.login(username='obama', password='smithpassword')  # login을 한 경우에는
+        login_success = self.client.login(username='obama', password='nopassword')  # login을 한 경우에는
         self.assertTrue(login_success)
         response = self.client.get(post_000_url)
         self.assertEqual(response.status_code, 200)
@@ -375,7 +375,7 @@ class TestView(TestCase):
         response = self.client.get('/blog/create/')
         self.assertNotEqual(response.status_code, 200)
 
-        self.client.login(username='smith', password='smithpassword')
+        self.client.login(username='smith', password='nopassword')
         response = self.client.get('/blog/create/')
         self.assertEqual(response.status_code, 200)
 
@@ -408,7 +408,7 @@ class TestView(TestCase):
             author=self.author_000,
         )
 
-        login_success = self.client.login(username='smith', password='smithpassword')
+        login_success = self.client.login(username='smith', password='nopassword')
         self.assertTrue(login_success)
 
         response = self.client.post(
@@ -422,3 +422,37 @@ class TestView(TestCase):
         main_div = soup.find('div', id='main-div')
         self.assertIn(post_000.title, main_div.text)
         self.assertIn('A test comment', main_div.text)
+
+        def test_delete_comment(self):
+            post_000 = create_post(
+                title='The first post',
+                content='Hello World. We are the world.',
+                author=self.author_000,
+            )
+
+            comment_000 = create_comment(post_000, text='a test comment', author=self.user_obama)
+            comment_001 = create_comment(post_000, text='a test comment', author=self.author_000)
+
+            self.assertEqual(Comment.objects.count(), 2)
+            self.assertEqual(post_000.comment_set.count(), 2)
+
+            login_success = self.client.login(username='smith', password='nopassword')
+            self.assertTrue(login_success)
+
+            # login을 다른 사람으로 했을 때,
+            response = self.client.get('/blog/delete_comment/{}/'.format(comment_000.pk), follow=True)
+            self.assertEqual(Comment.objects.count(), 2)
+            self.assertEqual(post_000.comment_set.count(), 2)
+
+            login_success = self.client.login(username='obama', password='nopassword')
+            response = self.client.get('/blog/delete_comment/{}/'.format(comment_000.pk), follow=True)
+            self.assertEqual(response.status_code, 200)
+
+            self.assertEqual(Comment.objects.count(), 1)
+            self.assertEqual(post_000.comment_set.count(), 1)
+
+            soup = BeautifulSoup(response.content, 'html.parser')
+            main_div = soup.find('div', id='main-div')
+
+            self.assertNotIn('obama', main_div.text)
+
